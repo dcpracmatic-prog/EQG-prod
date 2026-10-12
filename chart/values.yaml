@@ -1,0 +1,30 @@
+replicaCount: 1
+
+image:
+  repository: eqg
+  tag: "0.1.0"
+  pullPolicy: IfNotPresent
+
+mode: sim
+nQubits: 4
+shots: 2048
+smoke: true
+
+outputDir: /app/outputs
+
+resources:
+  limits:
+    cpu: "2"
+    memory: 4Gi
+  requests:
+    cpu: "500m"
+    memory: 1Gi
+
+serviceAccount:
+  create: true
+  name: eqg
+
+# IBM Quantum token — supply via secret
+ibmQuantum:
+  existingSecret: ""
+  secretKey: IBM_QUANTUM_TOKEN
