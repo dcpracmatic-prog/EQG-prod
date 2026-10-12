@@ -1,0 +1,28 @@
+product: edge-quantum-guard
+version: "0.1.0"
+
+runtime:
+  mode: sim
+  n_qubits: 4
+  shots: 2048
+  health_threshold: 0.92
+  seed: 0
+
+arms:
+  - A
+  - C
+  - D
+  - E
+
+backend:
+  name: ibm_fez
+  # Token via environment: IBM_QUANTUM_TOKEN or Qiskit Runtime auth
+
+dd:
+  sequence: CPMG
+  conditional: true
+
+metrics:
+  primary: HIS
+  report_se: true
+  report_z: true
