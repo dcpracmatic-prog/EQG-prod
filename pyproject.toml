@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "edge-quantum-guard"
+version = "0.1.0"
+description = "Edge Quantum Guard (EQG) — autonomous low-level control layer for quantum execution"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Elastic-2.0" }
+authors = [{ name = "DCPRACMATIC" }]
+dependencies = [
+  "numpy>=1.24",
+  "qiskit>=1.0",
+  "qiskit-aer>=0.14",
+  "pyyaml>=6.0",
+  "click>=8.1",
+]
+
+[project.scripts]
+eqg = "eqg.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
