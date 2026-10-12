@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "eqg.fullname" . }}
+  labels:
+    app.kubernetes.io/name: edge-quantum-guard
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: edge-quantum-guard
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: edge-quantum-guard
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      containers:
+        - name: eqg
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - --mode
+            - {{ .Values.mode | quote }}
+            - --n-qubits
+            - {{ .Values.nQubits | quote }}
+            - --shots
+            - {{ .Values.shots | quote }}
+            - --output-dir
+            - {{ .Values.outputDir | quote }}
+            {{- if .Values.smoke }}
+            - --smoke
+            {{- end }}
+          env:
+            - name: EQG_MODE
+              value: {{ .Values.mode | quote }}
+            {{- if .Values.ibmQuantum.existingSecret }}
+            - name: IBM_QUANTUM_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.ibmQuantum.existingSecret }}
+                  key: {{ .Values.ibmQuantum.secretKey }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: outputs
+              mountPath: {{ .Values.outputDir }}
+      volumes:
+        - name: outputs
+          emptyDir: {}
